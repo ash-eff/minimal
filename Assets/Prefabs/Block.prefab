@@ -89,7 +89,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 663299428461869577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -146,4 +146,5 @@ MonoBehaviour:
   secondPrefab: {fileID: 3315649784814358900, guid: 63de6bb2903f0294dad16bbbbba06216,
     type: 3}
   explode: {fileID: 8902501449261835353, guid: d27237df19b9276448f66f38d02872b4, type: 3}
-  numOfExtraBlocks: 5
+  numOfExtraBlocks: 3
+  explodeClip: {fileID: 8300000, guid: 8a2c14cc21f92044fadbcd9fc5ce69f0, type: 3}

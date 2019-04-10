@@ -14,6 +14,12 @@ public class Player : MonoBehaviour
     private GameObject bulletPrefab;
     [SerializeField]
     private int health = 100;
+    [SerializeField]
+    private AudioClip shoot;
+    [SerializeField]
+    private AudioClip damage;
+
+    private float nextFire = 0.0f;
 
     private Collider2D col;
     private SpriteRenderer spr;
@@ -43,7 +49,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         gc.PlayerHealth = health;
-        StartCoroutine(Shoot());
+        //StartCoroutine(Shoot());
     }
 
     private void Update()
@@ -53,6 +59,8 @@ public class Player : MonoBehaviour
             velocity = Vector2.zero;
             return;
         }
+
+        Shoot();
 
         ClampPosition();
         velocity = new Vector2(Input.GetAxisRaw("Horizontal"), 0f);
@@ -83,25 +91,38 @@ public class Player : MonoBehaviour
         transform.position = clampedPos;
     }
 
-    IEnumerator Shoot()
+    void Shoot()
     {
-        while (!gc.PlayerDead)
+        if (Input.GetMouseButton(0) && Time.time > nextFire)
         {
+            gc.PlaySFX(shoot);
+            nextFire = Time.time + shootSpeed;
             Instantiate(bulletPrefab, new Vector2(transform.position.x, transform.position.y + transform.localScale.y), Quaternion.identity);
 
-            yield return new WaitForSeconds(shootSpeed);
         }
     }
+
+    //IEnumerator Shoot()
+    //{
+    //    while (!gc.PlayerDead)
+    //    {
+    //        gc.PlaySFX(shoot);
+    //        Instantiate(bulletPrefab, new Vector2(transform.position.x, transform.position.y + transform.localScale.y), Quaternion.identity);
+    //
+    //        yield return new WaitForSeconds(shootSpeed);
+    //    }
+    //}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 9 || collision.gameObject.layer == 10)
         {
+            gc.PlaySFX(damage);
             StartCoroutine(cs.Shake(.5f, .2f));
             StartCoroutine(cs.ColorLerp());
             StartCoroutine(gc.LifeColorLerp());
             StartCoroutine(gc.ScoreColorLerp());
-            health--;
+            health--;   
             gc.PlayerHealth = health;
         }
     }

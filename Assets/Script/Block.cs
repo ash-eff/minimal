@@ -14,13 +14,17 @@ public class Block : MonoBehaviour
     private ParticleSystem explode;
     [SerializeField]
     private int numOfExtraBlocks;
+    [SerializeField]
+    private AudioClip explodeClip;
 
     private float blockSize;
 
+    Collider2D col;
     GameController gc;
 
     private void Awake()
     {
+        col = GetComponent<BoxCollider2D>();
         gc = FindObjectOfType<GameController>();
         blockSize = Random.Range(minSize, maxSize);
         transform.localScale = new Vector2(blockSize, blockSize);
@@ -28,6 +32,10 @@ public class Block : MonoBehaviour
 
     private void Update()
     {
+        if(transform.position.y < Camera.main.orthographicSize)
+        {
+            col.enabled = true;
+        }
         if(transform.position.y < -(Camera.main.orthographicSize + maxSize))
         {
             Destroy(gameObject);
@@ -36,11 +44,18 @@ public class Block : MonoBehaviour
 
     void Explode()
     {
+        gc.ScorePopUp(transform.position, 5 - Mathf.RoundToInt(transform.localScale.x));;
+        col.enabled = false;
+        transform.GetComponent<SpriteRenderer>().enabled = false;
+        gc.PlayerScore += 5 - Mathf.RoundToInt(transform.localScale.x);
+        gc.PlaySFX(explodeClip);
         Instantiate(explode, transform.position, Quaternion.identity);
+
         for (int i = 0; i < numOfExtraBlocks; i++)
         {
             Instantiate(secondPrefab, transform.position, Quaternion.identity);
         }
+
         Destroy(gameObject);
     }
 
@@ -48,9 +63,6 @@ public class Block : MonoBehaviour
     {
         if(collision.tag == "Bullet")
         {
-            gc.PlayerScore += 5 - Mathf.RoundToInt(transform.localScale.x);
-            transform.GetComponent<Collider2D>().enabled = false;
-            transform.GetComponent<SpriteRenderer>().enabled = false;
             Destroy(collision.gameObject);
             Explode();
         }

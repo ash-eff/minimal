@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
@@ -13,6 +14,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject pauseMenu;
     [SerializeField]
+    private GameObject scorePopup;
+    [SerializeField]
     private TextMeshProUGUI lifeText;
     [SerializeField]
     private TextMeshProUGUI scoreText;
@@ -20,6 +23,14 @@ public class GameController : MonoBehaviour
     private Color A;
     [SerializeField]
     private Color B;
+    [SerializeField]
+    private AudioSource musicSource;
+    [SerializeField]
+    private AudioSource fxSource;
+    [SerializeField]
+    private Toggle musicTog;
+    [SerializeField]
+    private Toggle sfxTog;
 
     private float speed = 2;
     private float playerHealth;
@@ -51,6 +62,8 @@ public class GameController : MonoBehaviour
         scoreText.text = playerScore.ToString("000000");
         resetButton.SetActive(playerDead);
         quitButton.SetActive(playerDead);
+        musicSource.enabled = musicTog.isOn;
+        fxSource.enabled = sfxTog.isOn;
         PauseMenu();
     }
 
@@ -66,6 +79,11 @@ public class GameController : MonoBehaviour
             scoreText.color = Color.Lerp(A, B, perc);
             yield return null;
         }
+    }
+
+    public void PlaySFX(AudioClip _audio)
+    {
+        fxSource.PlayOneShot(_audio);
     }
 
     public IEnumerator LifeColorLerp()
@@ -107,5 +125,11 @@ public class GameController : MonoBehaviour
         {
             Time.timeScale = 1;
         }
+    }
+
+    public void ScorePopUp(Vector3 _pos, int _score)
+    {
+        GameObject go = Instantiate(scorePopup, _pos, Quaternion.identity);
+        go.GetComponentInChildren<PopupScore>().score = _score;
     }
 }

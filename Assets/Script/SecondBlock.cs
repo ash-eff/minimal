@@ -11,6 +11,10 @@ public class SecondBlock : MonoBehaviour
     private GameObject bulletPrefab;
     [SerializeField]
     private TextMeshProUGUI lifeText;
+    [SerializeField]
+    private AudioClip shoot;
+    [SerializeField]
+    private AudioClip explode;
 
     private Rigidbody2D rb2d;
     private Collider2D col;
@@ -29,7 +33,7 @@ public class SecondBlock : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         xAxis = Random.Range(-5f, 5f);
         yAxis = Random.Range(0f, 2f);
-        lifeText.text = "...";
+        lifeText.text = "";
     }
 
     private void Update()
@@ -66,11 +70,13 @@ public class SecondBlock : MonoBehaviour
         int bullets = 3;
         while(bullets > 0)
         {
+            gc.PlaySFX(shoot);
             Instantiate(bulletPrefab, new Vector2(transform.position.x, transform.position.y), Quaternion.identity);
             bullets--;
             yield return new WaitForSeconds(.5f);
         }
 
+        gc.PlaySFX(explode);
         Instantiate(tinyExplosion, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
@@ -79,10 +85,12 @@ public class SecondBlock : MonoBehaviour
     {
         while (true)
         {
-            lifeText.text = "..";
-            yield return new WaitForSeconds(1);
-            lifeText.text = ".";
-            yield return new WaitForSeconds(1);
+            lifeText.text = "3";
+            yield return new WaitForSeconds(.5f);
+            lifeText.text = "2";
+            yield return new WaitForSeconds(.5f);
+            lifeText.text = "1";
+            yield return new WaitForSeconds(.5f);
         }
     }
 
@@ -90,8 +98,11 @@ public class SecondBlock : MonoBehaviour
     {
         if(collision.tag == "Bullet")
         {
+            col.enabled = false;
+            gc.ScorePopUp(transform.position, 5);
             gc.PlayerScore += 5;
             Destroy(collision.gameObject);
+            gc.PlaySFX(explode);
             Instantiate(tinyExplosion, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

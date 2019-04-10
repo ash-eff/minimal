@@ -69,6 +69,7 @@
     <Compile Include="Assets\Script\GameController.cs" />
     <Compile Include="Assets\Script\Loader.cs" />
     <Compile Include="Assets\Script\Player.cs" />
+    <Compile Include="Assets\Script\PopupScore.cs" />
     <Compile Include="Assets\Script\SecondBlock.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

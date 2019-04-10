@@ -148,6 +148,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1588484922539816841, guid: ddb786500a9f5354b8653479002aebf1,
     type: 3}
   health: 100
+  shoot: {fileID: 8300000, guid: 9cd73465a5307ea4cbe3b158f18b8b0f, type: 3}
+  damage: {fileID: 8300000, guid: 5dc50a907163e5b4bbe943957c5740c5, type: 3}
 --- !u!1001 &3895292837057468278
 PrefabInstance:
   m_ObjectHideFlags: 0
